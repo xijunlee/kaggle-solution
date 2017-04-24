@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 # matplotlib inline
 
 import plotly.offline as py
-py.init_notebook_mode(connected=True)
+#py.init_notebook_mode(connected=True)
 import plotly.graph_objs as go
 import plotly.tools as tls
 
@@ -19,10 +19,24 @@ from sklearn.svm import SVC
 from sklearn.cross_validation import KFold
 
 # Load in the train and test datasets
-train = pd.read_csv('../input/train.csv')
-test = pd.read_csv('../input/test.csv')
+train = pd.read_csv('train.csv')
+test = pd.read_csv('test.csv')
 
 # Store our passenger ID for easy access
 PassengerId = test['PassengerId']
 
-train.head(3)
+#print (train[['Pclass', 'Survived']].groupby(['Pclass'], as_index=False).mean())
+
+#print (train[["Sex", "Survived"]].groupby(['Sex'], as_index=False).mean())
+
+train = train.values
+test = test.values
+
+print type(train)
+
+X = train[:,1:]
+Y = train[:,0]
+
+print X
+
+print Y
