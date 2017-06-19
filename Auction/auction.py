@@ -28,14 +28,24 @@ auction = pd.read_csv("./auction.csv")
 #pd.crosstab(auction['item'],auction['auction_type']).apply(lambda x:100*x/sum(x),axis=1).plot(kind='bar').set_title("Number of items sold by auction")
 #plt.show()
 
-group = auction.groupby(['auctionid']).count().reset_index()
-ids = list(group[group['bid']>40]['auctionid'])
+group = auction.groupby(['auctionid','item']).count().reset_index()
+#print group.head(20)
+group = group[group['item'].isin(['Xbox game console'])][['auctionid','bid']]
+ids = list(group[group['bid']>30]['auctionid'])
 
-k = 4
-f, axes = plt.subplots(k, k, figsize=(10, 10), sharex=False)
-print ids
-for i in xrange(16):
+print len(ids)
+#sns.pointplot(x=id40['bidtime'],y=id40.index)
+#plt.show()
+
+k = 3
+
+f, axes = plt.subplots(k, k, figsize=(10, 10))
+for i in xrange(k**2):
     id40 = auction[auction['auctionid']==ids[i]]['bidtime'].reset_index()
     sns.distplot(id40['bidtime'],kde=False,ax=axes[i/k,i%k],axlabel=False)
+    #sns.jointplot(x="total_bill", y="tip",data=id40,ax=axes[i/k,i%k])
+    #axes[i/k,i%k].plot(id40['bidtime'],id40.index,'.-')
+    
 plt.show()
+
 
