@@ -155,10 +155,12 @@ for clf in acc_dict:
 	log_entry = pd.DataFrame([[clf, acc_dict[clf]]], columns=log_cols)
 	log = log.append(log_entry)
 
-plt.xlabel('Accuracy')
-plt.title('Classifier Accuracy')
+print log 
 
-sns.set_color_codes("muted")
-sns.barplot(x='Accuracy', y='Classifier', data=log, color="b")
+#plt.xlabel('Accuracy')
+#plt.title('Classifier Accuracy')
+
+#sns.set_color_codes("muted")
+#sns.barplot(x='Accuracy', y='Classifier', data=log, color="b")
 
 
