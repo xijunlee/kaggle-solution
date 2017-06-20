@@ -13,6 +13,7 @@ test_df  = pd.read_csv("./test.csv")
 train = train_df.drop('PassengerId',axis=1)
 test = test_df.drop('PassengerId',axis=1)
 
+# Feature engineering
 
 full_data = [train, test]
 
@@ -93,10 +94,25 @@ Y_train, X_train = train[:,0],train[:,1:]
 test = test.values
 X_test = test
 
-#param = {'max_depth':2, 'eta':1, 'silent':1, 'objective':'binary:logistic','n_estimators':300}
-#num_round = 2
-xgbClassifier = xgb.XGBClassifier(max_depth=3,n_estimators=300,learning_rate=0.05).fit(X_train,Y_train)
+dtrain = xgb.DMatrix(X_train,label=Y_train)
+
+# Modeling and Paramater Tuning
+# cross-validation
+param = {'max_depth':5, 'eta':1, 'silent':1, 'objective':'binary:logistic','n_estimators':300}
+num_boost_round = 10
+n_fold = 5
+res = xgb.cv(param,dtrain,num_boost_round,n_fold,metrics={'error'},seed=0,
+            callbacks=[xgb.callback.print_evaluation(show_stdv=False),
+                      xgb.callback.early_stop(3)])
+print res
+
+# sklearn-style xgboost
+'''
+xgbClassifier = xgb.XGBClassifier(max_depth=3,n_estimators=300,learning_rate=0.05,silent=False).fit(X_train,Y_train)
 predictions = xgbClassifier.predict(X_test)
 print predictions
 submission = pd.DataFrame({ 'PassengerId': test_df['PassengerId'], 'Survived': predictions })
 submission.to_csv("submission.csv", index=False)
+'''
+
+
