@@ -4,7 +4,8 @@
 import pandas as pd
 from pandas import Series,DataFrame
 import numpy as np
-import xgboost as xgb
+import re
+#import xgboost as xgb
 
 # get titanic & test csv files as a DataFrame
 train_df = pd.read_csv("./train.csv")
@@ -52,17 +53,41 @@ train['CategoricalAge'] = pd.cut(train['Age'], 5,labels=['very low','low','mediu
 
 #print (train[['CategoricalAge', 'Survived']].groupby(['CategoricalAge'], as_index=False).mean())
 
+def get_title(name):
+    title_search = re.search('([A-Za-z]+)\.', name)
+    # If the title exists, extract and return it.
+    if title_search:
+        #print title_search.group(0), title_search.group(1)
+        return title_search.group(1)
+    return ""
+
+for dataset in full_data:
+    dataset['Title'] = dataset['Name'].apply(get_title)
+print type(train['Title'])
+
+#print(pd.crosstab(train['Title'], train['Sex']))
+
+for dataset in full_data:
+    dataset['Title'] = dataset['Title'].replace(['Lady', 'Countess','Capt', 'Col',\
+    'Don', 'Dr', 'Major', 'Rev', 'Sir', 'Jonkheer', 'Dona'], 'Rare')
+
+    dataset['Title'] = dataset['Title'].replace('Mlle', 'Miss')
+    dataset['Title'] = dataset['Title'].replace('Ms', 'Miss')
+    dataset['Title'] = dataset['Title'].replace('Mme', 'Mrs')
+
+#print (train[['Title', 'Survived']].groupby(['Title'], as_index=False).mean())
+
 
 for dataset in full_data:
     # Mapping Sex
-    dataset['Sex'] = dataset['Sex'].map( {'female': 0, 'male': 1} ).astype(int)
+    dataset['Sex'] = dataset['Sex'].map({'female': 0, 'male': 1}).astype(int)
     
-    '''
+    
     # Mapping titles
     title_mapping = {"Mr": 1, "Miss": 2, "Mrs": 3, "Master": 4, "Rare": 5}
     dataset['Title'] = dataset['Title'].map(title_mapping)
     dataset['Title'] = dataset['Title'].fillna(0)
-    '''
+    
     # Mapping Embarked
     dataset['Embarked'] = dataset['Embarked'].map( {'S': 0, 'Q': 1, 'C': 2} ).astype(int)
     
@@ -107,7 +132,7 @@ res = xgb.cv(param,dtrain,num_boost_round,n_fold,metrics={'error'},seed=0,
 print res
 
 # sklearn-style xgboost
-'''
+
 xgbClassifier = xgb.XGBClassifier(max_depth=3,n_estimators=300,learning_rate=0.05,silent=False).fit(X_train,Y_train)
 predictions = xgbClassifier.predict(X_test)
 print predictions
