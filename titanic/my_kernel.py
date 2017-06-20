@@ -4,10 +4,14 @@
 import pandas as pd
 from pandas import Series,DataFrame
 import numpy as np
+import xgboost as xgb
 
 # get titanic & test csv files as a DataFrame
-train = pd.read_csv("./train.csv")
-test  = pd.read_csv("./test.csv")
+train_df = pd.read_csv("./train.csv")
+test_df  = pd.read_csv("./test.csv")
+
+train = train_df.drop('PassengerId',axis=1)
+test = test_df.drop('PassengerId',axis=1)
 
 
 full_data = [train, test]
@@ -76,14 +80,23 @@ for dataset in full_data:
     dataset.loc[ dataset['Age'] > 64, 'Age']  = 4
 
 # Feature Selection
-drop_elements = ['PassengerId', 'Name', 'Ticket', 'Cabin', 'SibSp',\
+drop_elements = ['Name', 'Ticket', 'Cabin', 'SibSp',\
                  'Parch', 'FamilySize']
 train = train.drop(drop_elements, axis = 1)
 train = train.drop(['CategoricalAge', 'CategoricalFare'], axis = 1)
-print train.head(10)
+#print train.head(10)
 
 test  = test.drop(drop_elements, axis = 1)
 
 train = train.values
-test  = test.values
+Y_train, X_train = train[:,0],train[:,1:]
+test = test.values
+X_test = test
 
+#param = {'max_depth':2, 'eta':1, 'silent':1, 'objective':'binary:logistic','n_estimators':300}
+#num_round = 2
+xgbClassifier = xgb.XGBClassifier(max_depth=3,n_estimators=300,learning_rate=0.05).fit(X_train,Y_train)
+predictions = xgbClassifier.predict(X_test)
+print predictions
+submission = pd.DataFrame({ 'PassengerId': test_df['PassengerId'], 'Survived': predictions })
+submission.to_csv("submission.csv", index=False)
