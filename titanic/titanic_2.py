@@ -24,6 +24,8 @@ for dataset in full_data:
     dataset['Embarked'] = dataset['Embarked'].fillna('S')
 print (train[['Embarked', 'Survived']].groupby(['Embarked'], as_index=False).mean())
 
+
+'''
 for dataset in full_data:
     dataset['Fare'] = dataset['Fare'].fillna(train['Fare'].median())
 train['CategoricalFare'] = pd.qcut(train['Fare'], 4)
@@ -41,6 +43,7 @@ for dataset in full_data:
 train['CategoricalAge'] = pd.cut(train['Age'], 5)
 
 print (train[['CategoricalAge', 'Survived']].groupby(['CategoricalAge'], as_index=False).mean())
+
 
 def get_title(name):
 	title_search = re.search(' ([A-Za-z]+)\.', name)
@@ -162,5 +165,5 @@ print log
 
 #sns.set_color_codes("muted")
 #sns.barplot(x='Accuracy', y='Classifier', data=log, color="b")
-
+'''
 
