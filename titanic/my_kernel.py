@@ -5,7 +5,7 @@ import pandas as pd
 from pandas import Series,DataFrame
 import numpy as np
 import re
-#import xgboost as xgb
+import xgboost as xgb
 
 # get titanic & test csv files as a DataFrame
 train_df = pd.read_csv("./train.csv")
@@ -67,6 +67,7 @@ print type(train['Title'])
 
 #print(pd.crosstab(train['Title'], train['Sex']))
 
+
 for dataset in full_data:
     dataset['Title'] = dataset['Title'].replace(['Lady', 'Countess','Capt', 'Col',\
     'Don', 'Dr', 'Major', 'Rev', 'Sir', 'Jonkheer', 'Dona'], 'Rare')
@@ -75,6 +76,7 @@ for dataset in full_data:
     dataset['Title'] = dataset['Title'].replace('Ms', 'Miss')
     dataset['Title'] = dataset['Title'].replace('Mme', 'Mrs')
 
+
 #print (train[['Title', 'Survived']].groupby(['Title'], as_index=False).mean())
 
 
@@ -82,9 +84,8 @@ for dataset in full_data:
     # Mapping Sex
     dataset['Sex'] = dataset['Sex'].map({'female': 0, 'male': 1}).astype(int)
     
-    
     # Mapping titles
-    title_mapping = {"Mr": 1, "Miss": 2, "Mrs": 3, "Master": 4, "Rare": 5}
+    title_mapping = {"Mr": 1, "Miss": 2, "Mrs": 3,"Master":4, "Rare": 5}
     dataset['Title'] = dataset['Title'].map(title_mapping)
     dataset['Title'] = dataset['Title'].fillna(0)
     
@@ -121,9 +122,13 @@ X_test = test
 
 dtrain = xgb.DMatrix(X_train,label=Y_train)
 
+maxDepth = 5
+eta = 1
+nEstimators = 300
+
 # Modeling and Paramater Tuning
 # cross-validation
-param = {'max_depth':5, 'eta':1, 'silent':1, 'objective':'binary:logistic','n_estimators':300}
+param = {'max_depth':maxDepth, 'eta':eta, 'silent':1, 'objective':'binary:logistic','n_estimators':nEstimators}
 num_boost_round = 10
 n_fold = 5
 res = xgb.cv(param,dtrain,num_boost_round,n_fold,metrics={'error'},seed=0,
@@ -131,13 +136,15 @@ res = xgb.cv(param,dtrain,num_boost_round,n_fold,metrics={'error'},seed=0,
                       xgb.callback.early_stop(3)])
 print res
 
+
+
 # sklearn-style xgboost
 
-xgbClassifier = xgb.XGBClassifier(max_depth=3,n_estimators=300,learning_rate=0.05,silent=False).fit(X_train,Y_train)
+xgbClassifier = xgb.XGBClassifier(max_depth=maxDepth,n_estimators=nEstimators,learning_rate=eta,silent=True).fit(X_train,Y_train)
 predictions = xgbClassifier.predict(X_test)
-print predictions
+#print predictions
 submission = pd.DataFrame({ 'PassengerId': test_df['PassengerId'], 'Survived': predictions })
 submission.to_csv("submission.csv", index=False)
-'''
+
 
 
