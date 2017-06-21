@@ -7,7 +7,7 @@ import pandas as pd
 import numpy as np
 import re
 import sklearn
-#import xgboost as xgb
+import xgboost as xgb
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pdb
@@ -254,7 +254,7 @@ predictions = gbm.predict(x_test)
 StackingSubmission = pd.DataFrame({ 'PassengerId': test_df['PassengerId'],
                             'Survived': predictions })
 StackingSubmission.to_csv("StackingSubmission.csv", index=False)
-
+print 'Stacking results saved to .csv successfully!'
 #print train.head(10)
 
 '''
