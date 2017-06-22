@@ -259,6 +259,7 @@ x_train2 = np.concatenate(( et_oof_train1, rf_oof_train1, ada_oof_train1, gb_oof
 x_test2 = np.concatenate(( et_oof_test1, rf_oof_test1, ada_oof_test1, gb_oof_test1, svc_oof_test1), axis=1)
 
 
+<<<<<<< HEAD
 # The 3rd Stacking
 
 rf2 = SklearnHelper(clf=RandomForestClassifier, seed=SEED, params=rf_params)
@@ -281,35 +282,12 @@ x_train3 = np.concatenate(( et_oof_train2, rf_oof_train2, ada_oof_train2, gb_oof
 x_test3 = np.concatenate(( et_oof_test2, rf_oof_test2, ada_oof_test2, gb_oof_test2, svc_oof_test2), axis=1)
 
 
-
-gbm = xgb.XGBClassifier(
-    #learning_rate = 0.02,
- n_estimators= 2000,
- max_depth= 4,
- min_child_weight= 2,
- #gamma=1,
- gamma=0.9,                        
- subsample=0.8,
- colsample_bytree=0.8,
- objective= 'binary:logistic',
- nthread= -1,
- scale_pos_weight=1).fit(x_train3, y_train)
-predictions = gbm.predict(x_test3)
-
-# Generate Submission File 
-StackingSubmission = pd.DataFrame({ 'PassengerId': test_df['PassengerId'],
-                            'Survived': predictions })
-StackingSubmission.to_csv("StackingSubmission.csv", index=False)
-print 'Stacking results saved to .csv successfully!'
-#print train.head(10)
-
-'''
 # Modeling and Paramater Tuning
 
-train = train.values
-Y_train, X_train = train[:,0],train[:,1:]
-test = test.values
-X_test = test
+#train = train.values
+X_train, Y_train = x_train2, y_train
+#test = test.values
+X_test = x_test2
 
 dtrain = xgb.DMatrix(X_train,label=Y_train)
 
@@ -326,8 +304,7 @@ res = xgb.cv(param,dtrain,num_boost_round,n_fold,metrics={'error'},seed=0,
                       xgb.callback.early_stop(3)])
 print res
 
-
-
+'''
 # sklearn-style xgboost
 
 xgbClassifier = xgb.XGBClassifier(max_depth=maxDepth,n_estimators=nEstimators,learning_rate=eta,silent=True).fit(X_train,Y_train)
