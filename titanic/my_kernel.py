@@ -217,6 +217,8 @@ train = train.drop(['Survived'], axis=1)
 x_train0 = train.values # Creates an array of the train data
 x_test0 = test.values # Creats an array of the test data
 
+
+# The 1st Stacking
 # Create 5 objects that represent our 4 models
 rf0 = SklearnHelper(clf=RandomForestClassifier, seed=SEED, params=rf_params)
 et0 = SklearnHelper(clf=ExtraTreesClassifier, seed=SEED, params=et_params)
@@ -224,7 +226,6 @@ ada0 = SklearnHelper(clf=AdaBoostClassifier, seed=SEED, params=ada_params)
 gb0 = SklearnHelper(clf=GradientBoostingClassifier, seed=SEED, params=gb_params)
 svc0 = SklearnHelper(clf=SVC, seed=SEED, params=svc_params)
 
-# The 1st Stacking
 # Create our OOF train and test predictions. These base results will be used as new features
 et_oof_train, et_oof_test = get_oof(et0, x_train0, y_train, x_test0) # Extra Trees
 rf_oof_train, rf_oof_test = get_oof(rf0,x_train0, y_train, x_test0) # Random Forest
@@ -237,14 +238,14 @@ print("The 1st Stacking training is complete")
 x_train1 = np.concatenate(( et_oof_train, rf_oof_train, ada_oof_train, gb_oof_train, svc_oof_train), axis=1)
 x_test1 = np.concatenate(( et_oof_test, rf_oof_test, ada_oof_test, gb_oof_test, svc_oof_test), axis=1)
 
-
+# The 2nd Stacking
 rf1 = SklearnHelper(clf=RandomForestClassifier, seed=SEED, params=rf_params)
 et1 = SklearnHelper(clf=ExtraTreesClassifier, seed=SEED, params=et_params)
 ada1 = SklearnHelper(clf=AdaBoostClassifier, seed=SEED, params=ada_params)
 gb1 = SklearnHelper(clf=GradientBoostingClassifier, seed=SEED, params=gb_params)
 svc1 = SklearnHelper(clf=SVC, seed=SEED, params=svc_params)
 
-# The 2nd Stacking
+
 # Create our OOF train and test predictions. These base results will be used as new features
 et_oof_train1, et_oof_test1 = get_oof(et1, x_train1, y_train, x_test1) # Extra Trees
 rf_oof_train1, rf_oof_test1 = get_oof(rf1,x_train1, y_train, x_test1) # Random Forest
@@ -256,6 +257,28 @@ print("The 2nd Stacking training is complete")
 
 x_train2 = np.concatenate(( et_oof_train1, rf_oof_train1, ada_oof_train1, gb_oof_train1, svc_oof_train1), axis=1)
 x_test2 = np.concatenate(( et_oof_test1, rf_oof_test1, ada_oof_test1, gb_oof_test1, svc_oof_test1), axis=1)
+
+
+# The 3rd Stacking
+
+rf2 = SklearnHelper(clf=RandomForestClassifier, seed=SEED, params=rf_params)
+et2 = SklearnHelper(clf=ExtraTreesClassifier, seed=SEED, params=et_params)
+ada2 = SklearnHelper(clf=AdaBoostClassifier, seed=SEED, params=ada_params)
+gb2 = SklearnHelper(clf=GradientBoostingClassifier, seed=SEED, params=gb_params)
+svc2 = SklearnHelper(clf=SVC, seed=SEED, params=svc_params)
+
+
+# Create our OOF train and test predictions. These base results will be used as new features
+et_oof_train2, et_oof_test2 = get_oof(et2, x_train2, y_train, x_test2) # Extra Trees
+rf_oof_train2, rf_oof_test2 = get_oof(rf2,x_train2, y_train, x_test2) # Random Forest
+ada_oof_train2, ada_oof_test2 = get_oof(ada2, x_train2, y_train, x_test2) # AdaBoost 
+gb_oof_train2, gb_oof_test1 = get_oof(gb2,x_train2, y_train, x_test2) # Gradient Boost
+svc_oof_train2, svc_oof_test2 = get_oof(svc2,x_train2, y_train, x_test2) # Support Vector Classifier
+#pdb.set_trace()
+print("The 2nd Stacking training is complete")
+
+x_train3 = np.concatenate(( et_oof_train2, rf_oof_train2, ada_oof_train2, gb_oof_train2, svc_oof_train2), axis=1)
+x_test3 = np.concatenate(( et_oof_test2, rf_oof_test2, ada_oof_test2, gb_oof_test2, svc_oof_test2), axis=1)
 
 
 
@@ -270,8 +293,8 @@ gbm = xgb.XGBClassifier(
  colsample_bytree=0.8,
  objective= 'binary:logistic',
  nthread= -1,
- scale_pos_weight=1).fit(x_train2, y_train)
-predictions = gbm.predict(x_test2)
+ scale_pos_weight=1).fit(x_train3, y_train)
+predictions = gbm.predict(x_test3)
 
 # Generate Submission File 
 StackingSubmission = pd.DataFrame({ 'PassengerId': test_df['PassengerId'],
