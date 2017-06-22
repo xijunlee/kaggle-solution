@@ -258,8 +258,6 @@ print("The 2nd Stacking training is complete")
 x_train2 = np.concatenate(( et_oof_train1, rf_oof_train1, ada_oof_train1, gb_oof_train1, svc_oof_train1), axis=1)
 x_test2 = np.concatenate(( et_oof_test1, rf_oof_test1, ada_oof_test1, gb_oof_test1, svc_oof_test1), axis=1)
 
-
-<<<<<<< HEAD
 # The 3rd Stacking
 
 rf2 = SklearnHelper(clf=RandomForestClassifier, seed=SEED, params=rf_params)
@@ -268,7 +266,6 @@ ada2 = SklearnHelper(clf=AdaBoostClassifier, seed=SEED, params=ada_params)
 gb2 = SklearnHelper(clf=GradientBoostingClassifier, seed=SEED, params=gb_params)
 svc2 = SklearnHelper(clf=SVC, seed=SEED, params=svc_params)
 
-
 # Create our OOF train and test predictions. These base results will be used as new features
 et_oof_train2, et_oof_test2 = get_oof(et2, x_train2, y_train, x_test2) # Extra Trees
 rf_oof_train2, rf_oof_test2 = get_oof(rf2,x_train2, y_train, x_test2) # Random Forest
@@ -276,13 +273,14 @@ ada_oof_train2, ada_oof_test2 = get_oof(ada2, x_train2, y_train, x_test2) # AdaB
 gb_oof_train2, gb_oof_test1 = get_oof(gb2,x_train2, y_train, x_test2) # Gradient Boost
 svc_oof_train2, svc_oof_test2 = get_oof(svc2,x_train2, y_train, x_test2) # Support Vector Classifier
 #pdb.set_trace()
-print("The 2nd Stacking training is complete")
+print("The 3rd Stacking training is complete")
 
 x_train3 = np.concatenate(( et_oof_train2, rf_oof_train2, ada_oof_train2, gb_oof_train2, svc_oof_train2), axis=1)
 x_test3 = np.concatenate(( et_oof_test2, rf_oof_test2, ada_oof_test2, gb_oof_test2, svc_oof_test2), axis=1)
 
 
 
+# The second level xgboost classifier
 gbm = xgb.XGBClassifier(
     #learning_rate = 0.02,
  n_estimators= 2000,
