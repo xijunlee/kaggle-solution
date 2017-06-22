@@ -246,13 +246,13 @@ svc1 = SklearnHelper(clf=SVC, seed=SEED, params=svc_params)
 
 # The 2nd Stacking
 # Create our OOF train and test predictions. These base results will be used as new features
-et_oof_train1, et_oof_test1 = get_oof(et, x_train1, y_train, x_test1) # Extra Trees
-rf_oof_train1, rf_oof_test1 = get_oof(rf,x_train1, y_train, x_test1) # Random Forest
-ada_oof_train1, ada_oof_test1 = get_oof(ada, x_train1, y_train, x_test1) # AdaBoost 
-gb_oof_train1, gb_oof_test1 = get_oof(gb,x_train1, y_train, x_test1) # Gradient Boost
-svc_oof_train1, svc_oof_test1 = get_oof(svc,x_train1, y_train, x_test1) # Support Vector Classifier
+et_oof_train1, et_oof_test1 = get_oof(et1, x_train1, y_train, x_test1) # Extra Trees
+rf_oof_train1, rf_oof_test1 = get_oof(rf1,x_train1, y_train, x_test1) # Random Forest
+ada_oof_train1, ada_oof_test1 = get_oof(ada1, x_train1, y_train, x_test1) # AdaBoost 
+gb_oof_train1, gb_oof_test1 = get_oof(gb1,x_train1, y_train, x_test1) # Gradient Boost
+svc_oof_train1, svc_oof_test1 = get_oof(svc1,x_train1, y_train, x_test1) # Support Vector Classifier
 #pdb.set_trace()
-print("The 1st Stacking training is complete")
+print("The 2nd Stacking training is complete")
 
 x_train2 = np.concatenate(( et_oof_train1, rf_oof_train1, ada_oof_train1, gb_oof_train1, svc_oof_train1), axis=1)
 x_test2 = np.concatenate(( et_oof_test1, rf_oof_test1, ada_oof_test1, gb_oof_test1, svc_oof_test1), axis=1)
