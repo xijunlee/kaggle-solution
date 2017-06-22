@@ -270,7 +270,7 @@ svc2 = SklearnHelper(clf=SVC, seed=SEED, params=svc_params)
 et_oof_train2, et_oof_test2 = get_oof(et2, x_train2, y_train, x_test2) # Extra Trees
 rf_oof_train2, rf_oof_test2 = get_oof(rf2,x_train2, y_train, x_test2) # Random Forest
 ada_oof_train2, ada_oof_test2 = get_oof(ada2, x_train2, y_train, x_test2) # AdaBoost 
-gb_oof_train2, gb_oof_test1 = get_oof(gb2,x_train2, y_train, x_test2) # Gradient Boost
+gb_oof_train2, gb_oof_test2 = get_oof(gb2,x_train2, y_train, x_test2) # Gradient Boost
 svc_oof_train2, svc_oof_test2 = get_oof(svc2,x_train2, y_train, x_test2) # Support Vector Classifier
 #pdb.set_trace()
 print("The 3rd Stacking training is complete")
