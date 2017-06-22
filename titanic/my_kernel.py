@@ -282,6 +282,31 @@ x_train3 = np.concatenate(( et_oof_train2, rf_oof_train2, ada_oof_train2, gb_oof
 x_test3 = np.concatenate(( et_oof_test2, rf_oof_test2, ada_oof_test2, gb_oof_test2, svc_oof_test2), axis=1)
 
 
+
+gbm = xgb.XGBClassifier(
+    #learning_rate = 0.02,
+ n_estimators= 2000,
+ max_depth= 4,
+ min_child_weight= 2,
+ #gamma=1,
+ gamma=0.9,                        
+ subsample=0.8,
+ colsample_bytree=0.8,
+ objective= 'binary:logistic',
+ nthread= -1,
+ scale_pos_weight=1).fit(x_train3, y_train)
+predictions = gbm.predict(x_test3)
+
+# Generate Submission File 
+StackingSubmission = pd.DataFrame({ 'PassengerId': test_df['PassengerId'],
+                            'Survived': predictions })
+StackingSubmission.to_csv("StackingSubmission.csv", index=False)
+print 'Stacking results saved to .csv successfully!'
+
+
+#print train.head(10)
+
+'''
 # Modeling and Paramater Tuning
 
 #train = train.values
@@ -303,7 +328,7 @@ res = xgb.cv(param,dtrain,num_boost_round,n_fold,metrics={'error'},seed=0,
             callbacks=[xgb.callback.print_evaluation(show_stdv=False),
                       xgb.callback.early_stop(3)])
 print res
-
+'''
 '''
 # sklearn-style xgboost
 
