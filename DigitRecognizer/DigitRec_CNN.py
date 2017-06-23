@@ -23,6 +23,7 @@ img_rows, img_cols = 28, 28
 nb_filters_1 = 32 # 64
 nb_filters_2 = 64 # 128
 nb_filters_3 = 128 # 256
+nb_filters_3 = 256
 nb_conv = 3
 
 def standardize(x):
@@ -52,6 +53,12 @@ cnn.add(conv.Convolution2D(nb_filters_3, nb_conv, nb_conv, activation="relu", bo
 cnn.add(conv.Convolution2D(nb_filters_3, nb_conv, nb_conv, activation="relu", border_mode='same'))
 cnn.add(conv.Convolution2D(nb_filters_3, nb_conv, nb_conv, activation="relu", border_mode='same'))
 cnn.add(conv.Convolution2D(nb_filters_3, nb_conv, nb_conv, activation="relu", border_mode='same'))
+cnn.add(conv.MaxPooling2D(strides=(2,2)))
+
+cnn.add(conv.Convolution2D(nb_filters_4, nb_conv, nb_conv, activation="relu", border_mode='same'))
+cnn.add(conv.Convolution2D(nb_filters_4, nb_conv, nb_conv, activation="relu", border_mode='same'))
+cnn.add(conv.Convolution2D(nb_filters_4, nb_conv, nb_conv, activation="relu", border_mode='same'))
+cnn.add(conv.Convolution2D(nb_filters_4, nb_conv, nb_conv, activation="relu", border_mode='same'))
 cnn.add(conv.MaxPooling2D(strides=(2,2)))
 
 cnn.add(core.Flatten())
