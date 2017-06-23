@@ -15,7 +15,7 @@ train = train_df.values
 test = test_df.values
 
 
-nb_epoch = 1 # Change to 100
+nb_epoch = 10 # Change to 100
 
 batch_size = 128
 img_rows, img_cols = 28, 28
@@ -34,6 +34,7 @@ trainX = train[:, 1:].reshape(train.shape[0], img_rows, img_cols, 1)
 trainX = trainX.astype(float)
 trainX = standardize(trainX)
 
+# convert the class label to one-hot vector
 trainY = kutils.to_categorical(train[:, 0])
 nb_classes = trainY.shape[1]
 
@@ -47,15 +48,15 @@ cnn.add(conv.Conv2D(nb_filters_2, nb_conv, nb_conv, activation="relu", border_mo
 cnn.add(conv.Conv2D(nb_filters_2, nb_conv, nb_conv, activation="relu", border_mode='same'))
 cnn.add(conv.MaxPooling2D(strides=(2,2)))
 
-#cnn.add(conv.Convolution2D(nb_filters_3, nb_conv, nb_conv, activation="relu", border_mode='same'))
-#cnn.add(conv.Convolution2D(nb_filters_3, nb_conv, nb_conv, activation="relu", border_mode='same'))
-#cnn.add(conv.Convolution2D(nb_filters_3, nb_conv, nb_conv, activation="relu", border_mode='same'))
-#cnn.add(conv.Convolution2D(nb_filters_3, nb_conv, nb_conv, activation="relu", border_mode='same'))
-#cnn.add(conv.MaxPooling2D(strides=(2,2)))
+cnn.add(conv.Convolution2D(nb_filters_3, nb_conv, nb_conv, activation="relu", border_mode='same'))
+cnn.add(conv.Convolution2D(nb_filters_3, nb_conv, nb_conv, activation="relu", border_mode='same'))
+cnn.add(conv.Convolution2D(nb_filters_3, nb_conv, nb_conv, activation="relu", border_mode='same'))
+cnn.add(conv.Convolution2D(nb_filters_3, nb_conv, nb_conv, activation="relu", border_mode='same'))
+cnn.add(conv.MaxPooling2D(strides=(2,2)))
 
 cnn.add(core.Flatten())
-cnn.add(core.Dropout(0.2))
-cnn.add(core.Dense(128, activation="relu")) # 4096
+cnn.add(core.Dropout(0.2)) # mitigate overfitting
+cnn.add(core.Dense(128, activation="relu")) # 4096 fully-connected forward neuro
 cnn.add(core.Dense(nb_classes, activation="softmax"))
 
 cnn.summary()
