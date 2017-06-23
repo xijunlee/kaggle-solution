@@ -25,9 +25,14 @@ nb_filters_2 = 64 # 128
 nb_filters_3 = 128 # 256
 nb_conv = 3
 
+def standardize(x):
+    mean = x.mean().astype(np.float32)
+    std = x.std().astype(np.float32)
+    return (x-mean)/std
+
 trainX = train[:, 1:].reshape(train.shape[0], img_rows, img_cols, 1)
 trainX = trainX.astype(float)
-trainX /= 255.0
+trainX = standardize(trainX)
 
 trainY = kutils.to_categorical(train[:, 0])
 nb_classes = trainY.shape[1]
@@ -60,7 +65,8 @@ cnn.fit(trainX, trainY, batch_size=batch_size, nb_epoch=nb_epoch, verbose=1)
 
 testX = test.reshape(test.shape[0], 28, 28, 1)
 testX = testX.astype(float)
-testX /= 255.0
+#testX /= 255.0
+testX = standardize(testX)
 
 yPred = cnn.predict_classes(testX)
 
