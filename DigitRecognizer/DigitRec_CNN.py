@@ -23,7 +23,7 @@ img_rows, img_cols = 28, 28
 nb_filters_1 = 32 # 64
 nb_filters_2 = 64 # 128
 nb_filters_3 = 128 # 256
-nb_filters_3 = 256
+nb_filters_4 = 256
 nb_conv = 3
 
 def standardize(x):
