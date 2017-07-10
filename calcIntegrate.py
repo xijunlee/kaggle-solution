@@ -5,17 +5,17 @@ from sympy import *
 import numpy as np
 import pandas as pd
 
-x, r = symbols('x')
-vl, vh = 10.0, 100.0
+x = symbols('x')
+vl, vh = 100,200
 lambs = [1,2,3,4]
-T = 3
+T = 5
 f = 1.0/(vh-vl)
 
 Rs = []
 for lamb in lambs:
 	R = []
 	for r in xrange(int(vl),int(vh),1):
-		integral = integrate((x-vl)/(vh-vl)+x/(vh-vl)*exp(-lamb*T*(1-(r-vl)/(vh-vl))*(1-(x-vl)/(vh-vl))),(x,r,vh))
+		integral = integrate((x-vl)/(vh-vl)+x/(vh-vl)*exp(-lamb*T*(1.0-(r-vl)/(vh-vl))*(1.0-(x-vl)/(vh-vl))),(x,r,vh))
 		R.append(lamb*T*integral)
 	Rs.append(R)
 Rs = np.array(Rs)
@@ -30,5 +30,5 @@ df = pd.DataFrame({
 
 print df.head()
 
-df.to_csv('T=3.csv',index=False )
+df.to_csv('T=5vl=100vh=200.csv',index=False )
 
