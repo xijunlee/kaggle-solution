@@ -8,13 +8,13 @@ import pandas as pd
 x = symbols('x')
 vl, vh = 100,200
 lambs = [1,2,3,4]
-T = 5
+T = 7
 f = 1.0/(vh-vl)
 
 Rs = []
 for lamb in lambs:
 	R = []
-	for r in xrange(int(vl),int(vh),1):
+	for r in xrange(int(vl),int(vh),2):
 		integral = integrate((x-vl)/(vh-vl)+x/(vh-vl)*exp(-lamb*T*(1.0-(r-vl)/(vh-vl))*(1.0-(x-vl)/(vh-vl))),(x,r,vh))
 		R.append(lamb*T*integral)
 	Rs.append(R)
@@ -30,5 +30,4 @@ df = pd.DataFrame({
 
 print df.head()
 
-df.to_csv('T=5vl=100vh=200.csv',index=False )
-
+df.to_csv('T=7vl=100vh=200.csv',index=False )
